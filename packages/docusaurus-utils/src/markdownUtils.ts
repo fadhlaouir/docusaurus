@@ -334,7 +334,11 @@ export function parseMarkdownContentTitle(
       contentTitle: toTextContentTitle(
         regularTitleMatch
           .groups!.title!.trim()
-          .replace(/\s*(?:\{#*[\w-]+\}|#+)$/, ''),
+          // Strip a trailing heading id (`{#id}`) or an ATX closing sequence
+          // (`#`). Per CommonMark, a closing `#` sequence only counts when
+          // preceded by a space or tab, so a `#` with no leading space (e.g. the
+          // `#` in `# Learn C#`) is part of the title text and must be kept.
+          .replace(/(?:\s*\{#*[\w-]+\}|\s+#+)$/, ''),
       ).trim(),
     };
   }
